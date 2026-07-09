@@ -1,78 +1,67 @@
-* {
-  box-sizing: border-box;
-}
-
-body {
-  font-family: sans-serif;
-  margin: 20px;
-  padding: 0;
-}
-
-h1 {
-  margin-top: 0;
-  font-size: 22px;
-}
-
-h2 {
-  margin-top: 0;
-  font-size: 20px;
-}
-
-h3 {
-  margin-top: 0;
-  font-size: 18px;
-}
-
-h4 {
-  margin-top: 0;
-  font-size: 16px;
-}
-
-h5 {
-  margin-top: 0;
-  font-size: 14px;
-}
-
-h6 {
-  margin-top: 0;
-  font-size: 12px;
-}
-
-code {
-  font-size: 1.2em;
-}
-
-ul {
-  padding-inline-start: 20px;
+:root {
+  --bg-start: #F9EEF2;
+  --bg-end: #EED8E0;
+  --card-bg: #FFFAF9;
+  --border: #DEC7CF;
+  --lavender: #D6CCEB;
+  --mint: #C8E6D4;
+  --peach: #F5DCC8;
+  --gold: #E8C97A;
+  --pink-glow: #E8ABBC;
+  --muted-rose: #D4919E;
+  --text-dark: #4A3840;
+  --text-mid: #7A5C64;
+  --text-light: #A68490;
+  --shadow-soft: rgba(180, 130, 140, 0.12);
+  --shadow-medium: rgba(180, 130, 140, 0.2);
 }
 
 * {
   box-sizing: border-box;
-}
-
-body {
-  font-family: sans-serif;
-  margin: 20px;
+  margin: 0;
   padding: 0;
 }
 
-.square {
-  background: #fff;
-  border: 1px solid #999;
-  float: left;
-  font-size: 24px;
+body {
+  font-family: 'Milchella', 'Cormorant Garamond', Georgia, serif;
   font-weight: bold;
-  line-height: 34px;
-  height: 34px;
-  margin-right: -1px;
-  margin-top: -1px;
-  padding: 0;
-  text-align: center;
-  width: 34px;
+  background: linear-gradient(135deg, var(--bg-start) 0%, var(--bg-end) 100%);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.square.winning-square {
-  background: #90EE90;
+.game {
+  display: flex;
+  flex-direction: row;
+  gap: 40px;
+  padding: 48px;
+  background: var(--card-bg);
+  border-radius: 24px;
+  box-shadow:
+    0 4px 6px var(--shadow-soft),
+    0 12px 28px var(--shadow-medium);
+  border: 1px solid var(--border);
+}
+
+.game-board {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.game-info {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 210px;
+}
+
+.board-row {
+  display: flex;
+  gap: 10px;
 }
 
 .board-row:after {
@@ -81,14 +70,156 @@ body {
   display: table;
 }
 
-.status {
-  margin-bottom: 10px;
-}
-.game {
-  display: flex;
-  flex-direction: row;
+.square {
+  background: var(--card-bg);
+  border: 2px solid var(--border);
+  font-family: 'Milchella', 'Cormorant Garamond', Georgia, serif;
+  font-size: 28px;
+  font-weight: bold;
+  height: 64px;
+  width: 64px;
+  line-height: 64px;
+  padding: 0;
+  text-align: center;
+  border-radius: 14px;
+  cursor: pointer;
+  color: #1a1a1a;
+  transition: all 0.25s ease;
+  box-shadow: 0 2px 6px var(--shadow-soft);
 }
 
-.game-info {
-  margin-left: 20px;
+.square:hover {
+  border-color: var(--pink-glow);
+  background: #FDF5F7;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px var(--shadow-medium);
+}
+
+.square:active {
+  transform: translateY(0px);
+  box-shadow: 0 2px 6px var(--shadow-soft);
+}
+
+.square.winning-square {
+  background: linear-gradient(135deg, #FDF0D5 0%, #FADDDF 100%);
+  border-color: var(--gold);
+  color: #1a1a1a;
+  animation: softSparkle 1s ease-in-out infinite alternate;
+  box-shadow:
+    0 0 12px rgba(232, 201, 122, 0.5),
+    0 0 20px rgba(232, 171, 188, 0.3);
+}
+
+@keyframes softSparkle {
+  0% {
+    box-shadow:
+      0 0 10px rgba(232, 201, 122, 0.4),
+      0 0 18px rgba(232, 171, 188, 0.25);
+    transform: scale(1);
+  }
+  100% {
+    box-shadow:
+      0 0 18px rgba(232, 201, 122, 0.65),
+      0 0 28px rgba(232, 171, 188, 0.4);
+    transform: scale(1.04);
+  }
+}
+
+.status {
+  font-family: 'Milchella', 'Cormorant Garamond', Georgia, serif;
+  font-size: 17px;
+  font-weight: bold;
+  color: var(--text-dark);
+  text-align: center;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, #EDE5F4 0%, #DCF0E5 100%);
+  border-radius: 12px;
+  border: 1px solid var(--lavender);
+  box-shadow: 0 2px 8px var(--shadow-soft);
+  letter-spacing: 0.3px;
+}
+
+button {
+  font-family: 'Milchella', 'Cormorant Garamond', Georgia, serif;
+  background: linear-gradient(135deg, var(--lavender) 0%, var(--mint) 100%);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 9px 18px;
+  font-size: 14px;
+  font-weight: bold;
+  color: var(--text-dark);
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 2px 8px var(--shadow-soft);
+  letter-spacing: 0.3px;
+}
+
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px var(--shadow-medium);
+  background: linear-gradient(135deg, var(--mint) 0%, var(--peach) 100%);
+}
+
+button:active {
+  transform: translateY(0px);
+}
+
+.game-info > button {
+  background: linear-gradient(135deg, var(--peach) 0%, #F5D0D8 100%);
+  font-size: 13px;
+}
+
+.game-info > button:hover {
+  background: linear-gradient(135deg, #F5D0D8 0%, var(--lavender) 100%);
+}
+
+ol {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-height: 280px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+li button {
+  width: 100%;
+  text-align: left;
+  font-size: 13px;
+  padding: 8px 14px;
+  border-radius: 14px;
+}
+
+li strong {
+  display: block;
+  padding: 9px 14px;
+  background: linear-gradient(135deg, #FDF0D5 0%, #FAD9DF 100%);
+  border-radius: 14px;
+  border: 1px solid var(--gold);
+  color: var(--text-dark);
+  font-family: 'Milchella', 'Cormorant Garamond', Georgia, serif;
+  font-size: 13px;
+  font-weight: bold;
+  letter-spacing: 0.3px;
+  box-shadow: 0 2px 6px var(--shadow-soft);
+}
+
+ol::-webkit-scrollbar {
+  width: 6px;
+}
+
+ol::-webkit-scrollbar-track {
+  background: var(--bg-start);
+  border-radius: 10px;
+}
+
+ol::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 10px;
+}
+
+ol::-webkit-scrollbar-thumb:hover {
+  background: var(--pink-glow);
 }

@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import Confetti from 'react-confetti';
 
 function Square({value, onSquareClick, isWinning}) {
   return (
@@ -72,8 +73,35 @@ export default function Game() {
   const [history, setHistory] = useState([{squares: Array(9).fill(null), location: null}]);
   const [currentMove, setCurrentMove] = useState(0);
   const [isAscending, setIsAscending] = useState(true);
+  const [showConfetti, setShowConfetti] = useState(false);
+  const [windowSize, setWindowSize] = useState({
+    width: window.innerWidth,
+    height: window.innerHeight
+  });
+
   const xIsNext = currentMove % 2 === 0;
   const currentSquares = history[currentMove].squares;
+  const winnerInfo = calculateWinner(currentSquares);
+  const winner = winnerInfo ? winnerInfo.winner : null;
+
+  // Track window size for confetti to fill the screen
+  useEffect(() => {
+    function handleResize() {
+      setWindowSize({ width: window.innerWidth, height: window.innerHeight });
+    }
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  useEffect(() => {
+    if (winner) {
+      setShowConfetti(true);
+      const timer = setTimeout(() => setShowConfetti(false), 5000);
+      return () => clearTimeout(timer);
+    } else {
+      setShowConfetti(false);
+    }
+  }, [winner]);
 
   function handlePlay(nextSquares, squareIndex) {
     const row = Math.floor(squareIndex / 3);
@@ -104,7 +132,6 @@ export default function Game() {
       description = 'Go to game start';
     }
     
-    // Show current move as text instead of button
     if (move === currentMove) {
       return (
         <li key={move}> 
@@ -120,21 +147,32 @@ export default function Game() {
     );
   });
 
-  // Sort moves based on toggle
   const sortedMoves = isAscending ? moves : moves.slice().reverse();
 
   return (
-    <div className="game">
-      <div className="game-board">
-        <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} />
+    <>
+      {showConfetti && (
+        <Confetti
+          width={windowSize.width}
+          height={windowSize.height}
+          colors={['#E8C97A', '#E8ABBC', '#D6CCEB', '#C8E6D4', '#F5DCC8', '#D4919E']}
+          numberOfPieces={250}
+          gravity={0.15}
+          recycle={false}
+        />
+      )}
+      <div className="game">
+        <div className="game-board">
+          <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} />
+        </div>
+        <div className="game-info">
+          <button onClick={toggleSort}>
+            Sort: {isAscending ? 'Ascending ↑' : 'Descending ↓'}
+          </button>
+          <ol>{sortedMoves}</ol>
+        </div>
       </div>
-      <div className="game-info">
-        <button onClick={toggleSort}>
-          Sort: {isAscending ? 'Ascending ↑' : 'Descending ↓'}
-        </button>
-        <ol>{sortedMoves}</ol>
-      </div>
-    </div>
+    </>
   );
 }
 
