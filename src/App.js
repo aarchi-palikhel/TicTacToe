@@ -39,7 +39,6 @@ function Board({ xIsNext, squares, onPlay }) {
     status = "Next Player: " + (xIsNext ? "x" : "o");
   }
 
-  // Use loops to create the board
   const board = [];
   for (let row = 0; row < 3; row++) {
     const boardRow = [];
@@ -84,7 +83,6 @@ export default function Game() {
   const winnerInfo = calculateWinner(currentSquares);
   const winner = winnerInfo ? winnerInfo.winner : null;
 
-  // Track window size for confetti to fill the screen
   useEffect(() => {
     function handleResize() {
       setWindowSize({ width: window.innerWidth, height: window.innerHeight });
@@ -121,6 +119,12 @@ export default function Game() {
 
   function toggleSort() {
     setIsAscending(!isAscending);
+  }
+
+  function handleNewGame() {
+    setHistory([{squares: Array(9).fill(null), location: null}]);
+    setCurrentMove(0);
+    setShowConfetti(false);
   }
 
   const moves = history.map((step, move) => {
@@ -163,7 +167,9 @@ export default function Game() {
       )}
       <div className="game">
         <div className="game-board">
+          <h1 className="game-title">✨ Tic-Tac-Toe ✨</h1>
           <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} />
+          <button className="new-game-btn" onClick={handleNewGame}>New Game 🎀</button>
         </div>
         <div className="game-info">
           <button onClick={toggleSort}>
