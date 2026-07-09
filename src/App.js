@@ -1,13 +1,31 @@
 import { useState, useEffect } from 'react';
 import Confetti from 'react-confetti';
 
+function XMark() {
+  return (
+    <svg viewBox="0 0 50 50" className="mark mark-x">
+      <line x1="10" y1="10" x2="40" y2="40" className="x-line x-line-1" />
+      <line x1="40" y1="10" x2="10" y2="40" className="x-line x-line-2" />
+    </svg>
+  );
+}
+
+function OMark() {
+  return (
+    <svg viewBox="0 0 50 50" className="mark mark-o">
+      <circle cx="25" cy="25" r="15" className="o-circle" />
+    </svg>
+  );
+}
+
 function Square({value, onSquareClick, isWinning}) {
   return (
-    <button 
-      className={`square ${isWinning ? 'winning-square' : ''}`} 
+    <button
+      className={`square ${isWinning ? 'winning-square' : ''}`}
       onClick={onSquareClick}
     >
-      {value}
+      {value === 'x' && <XMark />}
+      {value === 'o' && <OMark />}
     </button>
   );
 }
@@ -29,14 +47,18 @@ function Board({ xIsNext, squares, onPlay }) {
   const winnerInfo = calculateWinner(squares);
   const winner = winnerInfo ? winnerInfo.winner : null;
   const winningLine = winnerInfo ? winnerInfo.line : [];
-  
+  const isDraw = !winner && squares.every(square => square !== null);
+
   let status;
+  let statusClass = 'status';
   if (winner) {
-    status = "Winner: " + winner;
-  } else if (squares.every(square => square !== null)) {
-    status = "Draw! No one wins.";
+    status = `Winner: ${winner.toUpperCase()}!`;
+    statusClass = 'status status-win';
+  } else if (isDraw) {
+    status = "It's a Draw!";
+    statusClass = 'status status-draw';
   } else {
-    status = "Next Player: " + (xIsNext ? "x" : "o");
+    status = "Next Player: " + (xIsNext ? "X" : "O");
   }
 
   const board = [];
@@ -62,7 +84,7 @@ function Board({ xIsNext, squares, onPlay }) {
 
   return (
     <>
-      <div className="status">{status}</div>
+      <div className={statusClass}>{status}</div>
       {board}
     </>
   );  
@@ -169,12 +191,14 @@ export default function Game() {
         <div className="game-board">
           <h1 className="game-title">✨ Tic-Tac-Toe ✨</h1>
           <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} />
-          <button className="new-game-btn" onClick={handleNewGame}>New Game 🎀</button>
+          <button className="new-game-btn" onClick={handleNewGame}>New Game</button>
         </div>
+        <div className="divider" />
         <div className="game-info">
           <button onClick={toggleSort}>
             Sort: {isAscending ? 'Ascending ↑' : 'Descending ↓'}
           </button>
+          <h2 className="history-label">Move History</h2>
           <ol>{sortedMoves}</ol>
         </div>
       </div>

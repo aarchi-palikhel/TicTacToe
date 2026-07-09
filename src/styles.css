@@ -32,10 +32,21 @@ body {
   align-items: center;
 }
 
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .game {
   display: flex;
   flex-direction: row;
-  gap: 40px;
+  gap: 0;
   padding: 48px;
   background: var(--card-bg);
   border-radius: 24px;
@@ -43,6 +54,7 @@ body {
     0 4px 6px var(--shadow-soft),
     0 12px 28px var(--shadow-medium);
   border: 1px solid var(--border);
+  animation: fadeSlideUp 0.5s ease both;
 }
 
 .game-board {
@@ -50,6 +62,7 @@ body {
   flex-direction: column;
   align-items: center;
   gap: 16px;
+  padding-right: 40px;
 }
 
 .game-title {
@@ -83,6 +96,19 @@ body {
   flex-direction: column;
   gap: 12px;
   min-width: 210px;
+  padding-left: 40px;
+}
+
+.history-label {
+  font-family: 'Milchella', 'Cormorant Garamond', Georgia, serif;
+  font-size: 15px;
+  font-weight: 900;
+  color: var(--text-mid);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 2px;
 }
 
 .board-row {
@@ -105,13 +131,63 @@ body {
   height: 64px;
   width: 64px;
   line-height: 64px;
-  padding: 0;
+  padding: 6px;
   text-align: center;
   border-radius: 14px;
   cursor: pointer;
   color: #1a1a1a;
   transition: all 0.25s ease;
   box-shadow: 0 2px 6px var(--shadow-soft);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mark {
+  width: 38px;
+  height: 38px;
+  overflow: visible;
+}
+
+.x-line {
+  stroke: #1a1a1a;
+  stroke-width: 5;
+  stroke-linecap: round;
+  fill: none;
+  stroke-dasharray: 50;
+  stroke-dashoffset: 50;
+}
+
+.x-line-1 {
+  animation: drawLine 0.25s ease forwards;
+}
+
+.x-line-2 {
+  animation: drawLine 0.25s ease 0.2s forwards;
+}
+
+@keyframes drawLine {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.o-circle {
+  stroke: #1a1a1a;
+  stroke-width: 5;
+  stroke-linecap: round;
+  fill: none;
+  stroke-dasharray: 94.2;
+  stroke-dashoffset: 94.2;
+  animation: drawCircle 0.4s ease forwards;
+  transform-origin: center;
+  transform: rotate(-90deg);
+}
+
+@keyframes drawCircle {
+  to {
+    stroke-dashoffset: 0;
+  }
 }
 
 .square:hover {
@@ -248,4 +324,61 @@ ol::-webkit-scrollbar-thumb {
 
 ol::-webkit-scrollbar-thumb:hover {
   background: var(--pink-glow);
+}
+
+.divider {
+  width: 1px;
+  background: var(--border);
+  border-radius: 2px;
+  align-self: stretch;
+}
+
+.status-win {
+  background: linear-gradient(135deg, #FDF0D5 0%, #FADDDF 100%);
+  border-color: var(--gold);
+  font-size: 20px;
+  color: var(--text-dark);
+  box-shadow: 0 0 12px rgba(232, 201, 122, 0.35);
+}
+
+.status-draw {
+  background: linear-gradient(135deg, #EDE5F4 0%, #D6CCEB 100%);
+  border-color: var(--lavender);
+  font-size: 18px;
+  color: var(--text-mid);
+}
+
+@media (max-width: 600px) {
+  body {
+    align-items: flex-start;
+    padding: 20px;
+  }
+
+  .game {
+    flex-direction: column;
+    padding: 28px 20px;
+    gap: 0;
+    width: 100%;
+  }
+
+  .game-board {
+    padding-right: 0;
+    padding-bottom: 28px;
+  }
+
+  .divider {
+    width: 100%;
+    height: 1px;
+    align-self: auto;
+    margin-bottom: 28px;
+  }
+
+  .game-info {
+    padding-left: 0;
+    width: 100%;
+  }
+
+  ol {
+    max-height: 200px;
+  }
 }
